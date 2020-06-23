@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<springProperty scope="" name="LEVEL" source="logging.root.level" defaultValue="info"/>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%-4r [%t] %5p %c{1} - %m - traceId=%X{traceId}%n
+			</pattern>
+		</encoder>
+	</appender>
+	<root level="${LEVEL}">
+        <appender-ref ref="stdout" />
+    </root>
+</configuration>
