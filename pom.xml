@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.rd</groupId>
-  <artifactId>chassis-microservices-archetype</artifactId>
+  <groupId>com.example</groupId>
+  <artifactId>microservices-chassis-archetype</artifactId>
   <version>0.0.1</version>
   <packaging>maven-archetype</packaging>
 
-  <name>chassis-microservices-archetype</name>
+  <name>microservices-chassis-archetype</name>
 
   <build>
     <extensions>
@@ -38,9 +38,7 @@
   </build>
 
 
-  <description>Parent pom providing dependency and plugin management for applications
-		built with Maven</description>
-
+  <description>Parent pom providing dependency and plugin management for applications built with Maven</description>
   <url>https://projects.spring.io/spring-boot/#/spring-boot-starter-parent/chassis-microservices</url>
 
   <developers>

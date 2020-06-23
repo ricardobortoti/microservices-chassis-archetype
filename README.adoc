@@ -1,6 +1,6 @@
-= Guia de inicio
+=== Guia de inicio
 
-=== Pré-requisitos do projeto
+== Pré-requisitos do projeto
 * Java 11 ou superior
 * Docker (última versão)
 * Maven 3.5.* ou superior
@@ -8,14 +8,14 @@
 * Configurar o projeto para utilizar os fontes no encode UTF-8
 * É aconselhável a utilização do LOMBOK para gerar as estruturas dos objetos
 
-=== Instalando o archetype
+== Instalando o archetype
 No diretório do projeto do archetype, execute o comando dentro da pasta `target/generated-sources/archetype`:
 
 ```
 mvn install
 ```
 
-=== Gerando o projeto pelo archetype
+== Gerando o projeto pelo archetype
 
 * Altere a variável {nomeDoProjeto} com o nome do projeto no Java e execute via linha de comando, na pasta que você deseja criar o seu novo projeto:
 
@@ -24,7 +24,7 @@ mvn archetype:generate -DarchetypeArtifactId=chassis-microservices-archetype -Da
 ```
 
 ___
-=== Config Server
+== Config Server
 É necessário executar o config server na sua máquina localmente para fazer o download das configurações do projeto.
 Para isso clone o projeto `rd-config-server` na sua máquina.
 Dentro deste projeto, edite as seguintes informações no arquivo `application.properties`, na pasta `src/main/resources`:
@@ -35,14 +35,14 @@ spring.cloud.config.server.git.password: sua senha do GitLab
 Com isso, será possível fazer o download das configurações no repositório.
 
 ___
-=== Executando o projeto com docker
+== Executando o projeto com docker
 Jib constroi uma imagem Docker. Para criar a imagem execute o comando abaixo. O Jib utilizará o Docker daemon local:
 
 ```
 mvn clean package jib:dockerBuild -Dimage={nomeDaImagem} -Dprofile={nomeDoProfile} -Dconfig.server={urlConfigServer}
 ```
 
-==== Variáveis
+== Variáveis
 ....
 . -Dimage = nome da nova imagem criada no Docker
 . -Dprofile = ambiente onde rodará a aplicação (dev, qa ou prod)
@@ -72,7 +72,7 @@ docker run -p 8887:8887 \
 {nome da imagem do docker}
 ----
 
-==== Variáveis
+== Variáveis
 ....
 . license_key = Chave da licença  do NewRelic
 . nome_app = Nome da aplicação no NewRelic
@@ -83,7 +83,7 @@ docker run -p 8887:8887 \
 ....
 ___
 
-=== Utilização de parametros
+== Utilização de parametros
 1. No arquivo `application.properties`, na pasta `src/main/resources` do seu novo projeto:
 * Altere o valor da propriedade `spring.application.name` para o nome do projeto.
 * Indique se a aplicação ficará exporta externamente ao cluster através da variável `external.api={boolean}`, que sendo false indica que ela será usada internamente no cluster, como o Config Server, e sendo true indica que será uma api exposta. 
