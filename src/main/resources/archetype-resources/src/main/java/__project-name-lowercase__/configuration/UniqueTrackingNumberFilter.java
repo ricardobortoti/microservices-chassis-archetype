@@ -19,8 +19,10 @@ import com.newrelic.api.agent.NewRelic;
 
 @Component
 public class UniqueTrackingNumberFilter extends OncePerRequestFilter {
+	
     public static final String TRACE_ID_KEY = "traceId";
     public static final String EMPTY_TRACE_ID = "";
+    
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -40,4 +42,5 @@ public class UniqueTrackingNumberFilter extends OncePerRequestFilter {
             MDC.remove(TRACE_ID_KEY);
         }
     }
+    
 }

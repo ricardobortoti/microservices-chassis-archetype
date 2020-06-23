@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ${project-name-uppercase}Controller {
+	
     private static final Logger logger = LoggerFactory.getLogger(${project-name-uppercase}Controller.class);
 
     @GetMapping(value = "/")

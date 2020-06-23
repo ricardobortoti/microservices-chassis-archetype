@@ -7,4 +7,5 @@ import org.springframework.context.annotation.Repository;
 
 @Repository
 public class ${project-name-uppercase}Repository {
+	
 }

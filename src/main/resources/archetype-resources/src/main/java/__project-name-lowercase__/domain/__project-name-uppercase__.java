@@ -14,4 +14,5 @@ public class ${project-name-uppercase} {
     public void setId(Integer id) {
         this.id = id;
     }
+    
 }

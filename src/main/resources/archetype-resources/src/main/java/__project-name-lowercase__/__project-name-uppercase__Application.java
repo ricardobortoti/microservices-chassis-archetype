@@ -8,7 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ${project-name-uppercase}Application {
+	
 	public static void main(String[] args) {
 		SpringApplication.run(${project-name-uppercase}Application.class, args);
 	}
+	
 }
