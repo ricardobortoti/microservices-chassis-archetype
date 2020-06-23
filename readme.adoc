@@ -1,0 +1,94 @@
+= Guia de inicio
+
+=== Pré-requisitos do projeto
+* Java 11 ou superior
+* Docker (última versão)
+* Maven 3.5.* ou superior
+* Configurar o settings.xml (localizado na raiz) para acessar o nexus com seu usuário e colocar na pasta de referencia do maven utilizado.
+* Configurar o projeto para utilizar os fontes no encode UTF-8
+* É aconselhável a utilização do LOMBOK para gerar as estruturas dos objetos
+
+=== Instalando o archetype
+No diretório do projeto do archetype, execute o comando dentro da pasta `target/generated-sources/archetype`:
+
+```
+mvn install
+```
+
+=== Gerando o projeto pelo archetype
+
+* Altere a variável {nomeDoProjeto} com o nome do projeto no Java e execute via linha de comando, na pasta que você deseja criar o seu novo projeto:
+
+```
+mvn archetype:generate -DarchetypeArtifactId=chassis-microservices-archetype -DarchetypeVersion=0.0.1 -DarchetypeGroupId=com.example -DartifactId={nomeDoProjeto} -DinteractiveMode=false
+```
+
+___
+=== Config Server
+É necessário executar o config server na sua máquina localmente para fazer o download das configurações do projeto.
+Para isso clone o projeto `rd-config-server` na sua máquina.
+Dentro deste projeto, edite as seguintes informações no arquivo `application.properties`, na pasta `src/main/resources`:
+....
+spring.cloud.config.server.git.username: seu usuário do GitLab
+spring.cloud.config.server.git.password: sua senha do GitLab
+....
+Com isso, será possível fazer o download das configurações no repositório.
+
+___
+=== Executando o projeto com docker
+Jib constroi uma imagem Docker. Para criar a imagem execute o comando abaixo. O Jib utilizará o Docker daemon local:
+
+```
+mvn clean package jib:dockerBuild -Dimage={nomeDaImagem} -Dprofile={nomeDoProfile} -Dconfig.server={urlConfigServer}
+```
+
+==== Variáveis
+....
+. -Dimage = nome da nova imagem criada no Docker
+. -Dprofile = ambiente onde rodará a aplicação (dev, qa ou prod)
+. -Dconfig.server = URL do config server para baixar as configurações de cada ambiente. 
+Exemplo: http://user:pwd@{ipConfigServer}:9999 (onde user e pwd são o usuário e a senha para autenticar no config server, respectivamente (essas informações estão dentro do arquivo `application.properties`, na pasta `src/main/resources` do projeto do config server); O ipConfigServer é o IP da máquina que está rodando o config server, ex: 10.1.76.84)
+....
+
+E depois, para rodar a imagem no docker, execute o seguinte comando:
+
+```
+docker run -d -p 8887:8887 {nomeDaImagem}
+```
+
+___
+== _Uso do docker_
+Comando para o docker ser executado no ambiente de produção, para utilizar NewRelic e Splunk:
+
+----
+docker run -p 8887:8887 \
+-e "JAVA_TOOL_OPTIONS=-javaagent:/newrelic.jar -Dnewrelic.config.license_key={license_key} -Dnewrelic.config.app_name={nome_app} -Dnewrelic.config.distributed_tracing.enabled=true" \
+--log-driver=splunk \
+--log-opt splunk-token={splunk_token} \
+--log-opt splunk-url={splunk_url} \
+--log-opt splunk-insecureskipverify=true \
+--log-opt splunk-source={splunk_source} \
+--log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" \
+{nome da imagem do docker}
+----
+
+==== Variáveis
+....
+. license_key = Chave da licença  do NewRelic
+. nome_app = Nome da aplicação no NewRelic
+. splunk_token = Token de autenticação fornecida pelo splunk
+. splunk_url = url da localização do plunk
+. splunk_source = fonte do splunk
+. nome da imagem do docker = nome da imagem criada no docker
+....
+___
+
+=== Utilização de parametros
+1. No arquivo `application.properties`, na pasta `src/main/resources` do seu novo projeto:
+* Altere o valor da propriedade `spring.application.name` para o nome do projeto.
+* Indique se a aplicação ficará exporta externamente ao cluster através da variável `external.api={boolean}`, que sendo false indica que ela será usada internamente no cluster, como o Config Server, e sendo true indica que será uma api exposta. 
+
+----
+spring.application.name={nomeDoProjeto}
+external.api={boolean}
+----
