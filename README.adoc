@@ -84,11 +84,9 @@ docker run -p 8887:8887 \
 ___
 
 == Utilização de parametros
-1. No arquivo `application.properties`, na pasta `src/main/resources` do seu novo projeto:
+1. No arquivo `bootstrap.properties`, na pasta `src/main/resources` do seu novo projeto:
 * Altere o valor da propriedade `spring.application.name` para o nome do projeto.
-* Indique se a aplicação ficará exporta externamente ao cluster através da variável `external.api={boolean}`, que sendo false indica que ela será usada internamente no cluster, como o Config Server, e sendo true indica que será uma api exposta. 
 
 ----
-spring.application.name={nomeDoProjeto}
-external.api={boolean}
+spring.application.name={your-microservice-name}
 ----
