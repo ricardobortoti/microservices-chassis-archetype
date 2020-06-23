@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
 public class ${project-name-uppercase}Controller {
     private static final Logger logger = LoggerFactory.getLogger(${project-name-uppercase}Controller.class);
 
@@ -20,4 +19,5 @@ public class ${project-name-uppercase}Controller {
         logger.warn("getExemple method");
         return ResponseEntity.ok("Hello World!");
     }
+    
 }
