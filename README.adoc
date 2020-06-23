@@ -1,26 +1,40 @@
-=== Guia de inicio
+= My commands sheet
+:toc:
 
-== Pré-requisitos do projeto
-* Java 11 ou superior
-* Docker (última versão)
-* Maven 3.5.* ou superior
-* Configurar o settings.xml (localizado na raiz) para acessar o nexus com seu usuário e colocar na pasta de referencia do maven utilizado.
-* Configurar o projeto para utilizar os fontes no encode UTF-8
-* É aconselhável a utilização do LOMBOK para gerar as estruturas dos objetos
+== Getting started 
 
-== Instalando o archetype
-No diretório do projeto do archetype, execute o comando dentro da pasta `target/generated-sources/archetype`:
+=== Install Java 11
+
+	brew tap AdoptOpenJDK/openjdk
+	brew cask install adoptopenjdk11
+	which java
+	
+=== Instal Maven3
+
+ 	brew install maven
+ 	mvn --version
+	
+=== Install Docker Desktop for Mac and 
+
+https://docs.docker.com/docker-for-mac/install/ 
+
+Verify docker installation
+ 
+	docker -v 
+
+=== Install the archetype on your local Maven repo
+ 
+NOTE: you just need to do this one time  
 
 ```
 mvn install
 ```
+...in `microservices-chassis-archetype` root directory 
 
-== Gerando o projeto pelo archetype
-
-* Altere a variável {nomeDoProjeto} com o nome do projeto no Java e execute via linha de comando, na pasta que você deseja criar o seu novo projeto:
+== Creating new microsservices using the `microservices-chassis-archetype` 
 
 ```
-mvn archetype:generate -DarchetypeArtifactId=chassis-microservices-archetype -DarchetypeVersion=0.0.1 -DarchetypeGroupId=com.example -DartifactId={nomeDoProjeto} -DinteractiveMode=false
+mvn archetype:generate -DarchetypeArtifactId=microservices-chassis-archetype -DarchetypeVersion=0.0.1 -DarchetypeGroupId=com.example -DartifactId={my_application} -DinteractiveMode=false
 ```
 
 ___
@@ -71,17 +85,6 @@ docker run -p 8887:8887 \
 --log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" \
 {nome da imagem do docker}
 ----
-
-== Variáveis
-....
-. license_key = Chave da licença  do NewRelic
-. nome_app = Nome da aplicação no NewRelic
-. splunk_token = Token de autenticação fornecida pelo splunk
-. splunk_url = url da localização do plunk
-. splunk_source = fonte do splunk
-. nome da imagem do docker = nome da imagem criada no docker
-....
-___
 
 == Utilização de parametros
 1. No arquivo `bootstrap.properties`, na pasta `src/main/resources` do seu novo projeto:
