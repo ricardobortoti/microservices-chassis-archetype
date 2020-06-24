@@ -1,0 +1,85 @@
+= My commands sheet
+:toc:
+
+== Getting started 
+
+=== Install Java 11
+
+	brew tap AdoptOpenJDK/openjdk
+	brew cask install adoptopenjdk11
+	which java
+	
+=== Instal Maven3
+
+ 	brew install maven
+ 	mvn --version
+	
+=== Install Docker Desktop for Mac and 
+
+https://docs.docker.com/docker-for-mac/install/ 
+
+Verify docker installation
+ 
+	docker -v 
+
+== Replace before you go...
+
+In `boostrap.properties` file, change the microservice *application name* default value to the final project name.
+
+`spring.application.name=my_application`
+
+== Externalized configuration (Config Server)
+
+Applications sometimes store config as constants in the code and this is a violation of best practices, which *requires strict separation of config from code*.
+
+This microservice *must* read all configurations from an external Spring Cloud Config Server (make sure that there is an running config server). Take a look at Config Server project https://github.com/wanderleisouza/config-server/blob/master/README.adoc[README.adoc] file for additional details.
+
+	curl -s http://localhost:8888/my_application/dev
+	
+
+=== Profiles (dev, qa, prod) 
+
+Use a spring profile to start the application. The profile `-Dspring.profiles.active=dev` will read properties files from config server/github repo.
+
+	mvn spring-boot:run -Dspring.profiles.active=dev -Dspring.cloud.config.uri=http://localhost:8888
+
+...as an alternative, you can run the microservice as a docker container 
+		
+	mvn clean package jib:dockerBuild -Dimage=examples/my_application
+	
+	docker run --env spring.profiles.active=dev,docker --env spring.cloud.config.uri=http://host.docker.internal:8888 -p 8080:8080 examples/my_application
+
+== Logging 
+
+Spring-boot defaults:
+
+* SLF4J: Logging facade
+* Logback: SLF4J implementation
+
+A twelve-factor app never concerns itself with routing or storage of its output stream. It should not attempt to write to or manage logfiles. Instead, each running process writes its event stream, unbuffered, to `stdout`
+
+The Spring Boot logger is configured to only log messages of `INFO` level or higher. We can see the `TRACE` and `DEBUG` messages if we add the following to our `application.properties` file (from config repo)
+
+	logging.level.root=INFO
+	logging.level.com.example=DEBUG
+
+=== Splunk in action!
+
+Setup the Splunk HTTP Event Collector 
+https://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_Splunk_Enterprise
+	
+...and user docker splunk log driver
+	
+== Docker with new relic and splunk integration...
+
+----
+docker run -p 8887:8887 \
+-e "JAVA_TOOL_OPTIONS=-javaagent:/newrelic.jar -Dnewrelic.config.license_key={license_key} -Dnewrelic.config.app_name={nome_app} -Dnewrelic.config.distributed_tracing.enabled=true" \
+--log-driver=splunk \
+--log-opt splunk-token={splunk_token} \
+--log-opt splunk-url={splunk_url} \
+--log-opt splunk-insecureskipverify=true \
+--log-opt splunk-source={splunk_source} \
+--log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" \
+{docker_image_name}
+----
