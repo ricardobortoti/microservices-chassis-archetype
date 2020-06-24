@@ -3,7 +3,7 @@
 	<springProperty scope="" name="LEVEL" source="logging.root.level" defaultValue="info"/>
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] traceId=%X{traceId} %-5level %logger{39} - %msg%n</pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %X{traceId} %-5level %logger{39} - %msg%n</pattern>
 		</encoder>
 	</appender>
 	<root level="${LEVEL}">
