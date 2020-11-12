@@ -110,10 +110,6 @@
 						<environment>
 							<_JAVA_OPTIONS>'-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'</_JAVA_OPTIONS>
 						</environment>
-						<jvmFlags>
-							<jvmFlag>-Dspring.profiles.active=${profile}</jvmFlag>
-							<jvmFlag>-Dspring.cloud.config.uri=${config.server}</jvmFlag>
-						</jvmFlags>
 						<ports>
 							<port>8080</port>
 							<port>5005</port>
