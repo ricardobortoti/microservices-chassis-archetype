@@ -35,10 +35,10 @@ public class MDCFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         var principal = (JwtAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
         String clientId = null;
-        String name = null;
+        String userId = null;
         if (principal != null) {
-            clientId = ((Jwt) principal.getPrincipal()).getClaim("client_id").toString();//principal.getAccount().getKeycloakSecurityContext().getToken().getIssuedFor();
-            name = principal.getName();
+            clientId = ((Jwt) principal.getPrincipal()).getClaim("client_id").toString();
+            userId = principal.getName();
         }
         var distributedTracePayload = NewRelic.getAgent().getTransaction().createDistributedTracePayload().text();
         Optional<String> json = Optional.ofNullable(distributedTracePayload).filter(Predicate.not(String::isEmpty));
@@ -50,7 +50,7 @@ public class MDCFilter extends OncePerRequestFilter {
         }
 
         MDC.put(TRACE_ID_KEY, traceId);
-        MDC.put(USER_ID_KEY, name);
+        MDC.put(USER_ID_KEY, userId);
         MDC.put(CLIENT_ID_KEY, clientId);
         try {
             filterChain.doFilter(request, response);
