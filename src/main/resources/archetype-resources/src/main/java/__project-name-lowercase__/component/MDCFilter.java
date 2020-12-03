@@ -12,9 +12,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.MDC;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,20 +27,19 @@ import com.newrelic.api.agent.NewRelic;
 public class MDCFilter extends OncePerRequestFilter {
 	
     public static final String TRACE_ID_KEY = "traceId";
+    public static final String USER_ID_KEY = "userId";
     public static final String CLIENT_ID_KEY = "clientId";
-    public static final String ISSUED_FOR_KEY = "issuedFor";
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-    	
-    	var principal = (KeycloakAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
-    	String issuedFor = null;
-    	String name = null;
-    	if (principal != null) {
-    		issuedFor = principal.getAccount().getKeycloakSecurityContext().getToken().getIssuedFor();
-    		name = principal.getName();
-    	}
+        var principal = (JwtAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
+        String clientId = null;
+        String name = null;
+        if (principal != null) {
+            clientId = ((Jwt) principal.getPrincipal()).getClaim("client_id").toString();//principal.getAccount().getKeycloakSecurityContext().getToken().getIssuedFor();
+            name = principal.getName();
+        }
         var distributedTracePayload = NewRelic.getAgent().getTransaction().createDistributedTracePayload().text();
         Optional<String> json = Optional.ofNullable(distributedTracePayload).filter(Predicate.not(String::isEmpty));
 
@@ -50,14 +50,13 @@ public class MDCFilter extends OncePerRequestFilter {
         }
 
         MDC.put(TRACE_ID_KEY, traceId);
-        MDC.put(CLIENT_ID_KEY, name);
-        MDC.put(ISSUED_FOR_KEY, issuedFor);
+        MDC.put(USER_ID_KEY, name);
+        MDC.put(CLIENT_ID_KEY, clientId);
         try {
             filterChain.doFilter(request, response);
         } finally {
             MDC.remove(TRACE_ID_KEY);
         }
-        
+
     }
-    
 }
