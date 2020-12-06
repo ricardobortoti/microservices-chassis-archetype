@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import javax.annotation.security.RolesAllowed;
 
 @RestController
 public class ${project-name-uppercase}Controller {
@@ -16,8 +17,14 @@ public class ${project-name-uppercase}Controller {
 
     @GetMapping(value = "/")
     public ResponseEntity<String> getExemplo() {
-        logger.warn("getExemple method");
+        logger.warn("getExample method");
         return ResponseEntity.ok("Hello World!");
     }
-    
+
+    @RolesAllowed("admin")
+    @GetMapping("/goodbye")
+    public String getGoodbye() {
+        return "goodbye";
+    }
+
 }
