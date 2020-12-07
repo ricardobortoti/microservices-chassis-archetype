@@ -39,5 +39,6 @@ public class JwtAuthenticationConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.GET, "/actuator/health", "/actuator/info");
+        getHttp().cors();
     }
 }
