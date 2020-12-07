@@ -1,6 +1,6 @@
-#set( $symbol_pound='#')
-#set( $symbol_dollar='$')
-#set( $symbol_escape='\' )
+#set($symbol_pound='#')
+#set($symbol_dollar='$')
+#set($symbol_escape='\' )
 package ${package}.${project-name-lowercase}.configuration;
 
 import org.springframework.context.annotation.Configuration;
