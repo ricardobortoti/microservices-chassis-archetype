@@ -34,7 +34,7 @@ public class ${project-name-uppercase}Controller {
         return "goodbye";
     }
 
-    @PostAuthorize("(returnObject.userid == authentication.name) or hasRole('admin')")
+    @PostAuthorize("(returnObject.name == authentication.principal.claims.get('cognito:username')) or hasRole('admin')")
     @GetMapping("/customers/{username}")
     public Customer getCustomer(@PathVariable final String username) {
         return customerService.findByUsername(username);
