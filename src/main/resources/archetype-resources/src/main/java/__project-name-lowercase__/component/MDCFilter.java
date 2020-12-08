@@ -4,6 +4,7 @@
 package ${package}.${project-name-lowercase}.component;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -25,20 +26,23 @@ import com.newrelic.api.agent.NewRelic;
 
 @Component
 public class MDCFilter extends OncePerRequestFilter {
-	
+
     public static final String TRACE_ID_KEY = "traceId";
     public static final String USER_ID_KEY = "userId";
     public static final String CLIENT_ID_KEY = "clientId";
-    
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         var principal = (JwtAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
         String clientId = null;
         String userId = null;
+
         if (principal != null) {
-            clientId = ((Jwt) principal.getPrincipal()).getClaim("client_id").toString();
-            userId = principal.getName();
+            Jwt jwt = (Jwt)principal.getPrincipal();
+
+            clientId =  ((ArrayList)jwt.getClaim("aud")).get(0).toString();
+            userId = Optional.ofNullable(jwt.getClaim("custom:socid")).orElse(jwt.getClaim("email")).toString();
         }
         var distributedTracePayload = NewRelic.getAgent().getTransaction().createDistributedTracePayload().text();
         Optional<String> json = Optional.ofNullable(distributedTracePayload).filter(Predicate.not(String::isEmpty));
