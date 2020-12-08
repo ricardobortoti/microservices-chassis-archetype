@@ -35,3 +35,7 @@ mvn install
 ```
 mvn archetype:generate -DarchetypeArtifactId=microservices-chassis-archetype -DarchetypeVersion=0.0.1 -DarchetypeGroupId=com.example -DartifactId={my_application} -DinteractiveMode=false
 ```
+
+== Downloading and configuring aws CLI
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html
