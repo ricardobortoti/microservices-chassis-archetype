@@ -83,3 +83,16 @@ docker run -p 8887:8887 \
 --log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}" \
 {docker_image_name}
 ----
+
+== Useful Amazon Cognito Commands
+
+=== Get user token
+----
+
+aws cognito-idp initiate-auth --region [REGION] --auth-flow USER_PASSWORD_AUTH --client-id [CLIENTID] --auth-parameters USERNAME=[USERNAME],PASSWORD=[PASSWORD]
+----
+=== Set custom attribute value
+----
+
+aws cognito-idp admin-update-user-attributes --user-pool-id [USERPOOLID] --username [USERNAME] --user-attributes Name=[ATTRIBUTENAME],Value=[VALUE]
+----
