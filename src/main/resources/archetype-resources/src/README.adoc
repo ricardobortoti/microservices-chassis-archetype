@@ -96,3 +96,8 @@ aws cognito-idp initiate-auth --region [REGION] --auth-flow USER_PASSWORD_AUTH -
 
 aws cognito-idp admin-update-user-attributes --user-pool-id [USERPOOLID] --username [USERNAME] --user-attributes Name=[ATTRIBUTENAME],Value=[VALUE]
 ----
+=== Add custom attribute to users
+----
+
+aws cognito-idp add-custom-attributes --user-pool-id [USERPOOLID] --custom-attributes Name="[ATTRIBUTENAME]",AttributeDataType="String",DeveloperOnlyAttribute=false,Required=false,StringAttributeConstraints="{MinLength=1,MaxLength=255}"
+----
