@@ -38,9 +38,14 @@ public class MDCFilter extends OncePerRequestFilter {
         String clientId = null;
         String userId = null;
         if (principal != null) {
-            Jwt jwt = (Jwt)principal.getPrincipal();
-            clientId =  ((ArrayList)jwt.getClaim("aud")).get(0).toString();
-            userId = jwt.getClaim("custom:customerid");
+            Jwt jwt = (Jwt) principal.getPrincipal();
+            //if is a idtoken the property change names
+            if (jwt.getClaim("aud") != null) {
+                clientId = ((ArrayList) jwt.getClaim("aud")).get(0).toString();
+            } else {
+                clientId = jwt.getClaim("client_id").toString();
+            }
+            userId = jwt.getClaim("email");
         }
         var distributedTracePayload = NewRelic.getAgent().getTransaction().createDistributedTracePayload().text();
         Optional<String> json = Optional.ofNullable(distributedTracePayload).filter(Predicate.not(String::isEmpty));
